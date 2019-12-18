@@ -60,7 +60,7 @@
 
           <view class="song-sub text-sm padding">
             <view>
-              <text v-for="item in songInfo.tags" :key="item" class='cu-tag round song-tag text-sm'>{{item}}</text>
+              <text v-for="(item, idx) in songInfo.tags" :key="idx" class='cu-tag round song-tag text-sm'>{{item}}</text>
             </view>
             <view class="padding-top">{{ songInfo.desc }}</view>
           </view>
@@ -87,14 +87,14 @@ export default {
       isShowInfo: false
     };
   },
-  onLoad() {
-    this.getData();
+  onLoad(option) {
+    this.getData(option.id);
   },
   methods: {
     ...mapMutations(['setCurrentTracks']),
-    async getData() {
+    async getData(id) {
       this.fetchFinish = false;
-      const songInfoData = await this.request("/playlist/detail?id=3068492515");
+      const songInfoData = await this.request("/playlist/detail?id="+id);
       const data = songInfoData.playlist;
       this.songInfo = {
         name: data.name,

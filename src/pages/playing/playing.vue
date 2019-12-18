@@ -4,19 +4,17 @@
       <view class="player">
         <view class="player__top">
           <view class="player-cover" v-show="showCover" @click="showCover=false">
-            <view>
               <view
                 v-for="(track, index) in tracks"
                 v-if="index === currentTrackIndex"
-                :key="track.name"
+                :key="track.id"
                 :class="['animated faster player-cover__item',transitionName]"
                 :style="{ backgroundImage: `url(${track.cover})` }"
               ></view>
-            </view>
           </view>
 
           <view class="player-cover" v-show="!showCover" @click="showCover=true">
-            <scroll-view scroll-y class="player-scrollview" :scroll-into-view="currentLyr">
+            <scroll-view scroll-y :class="['animated faster player-scrollview',transitionName]" :scroll-into-view="currentLyr">
               <view
                 v-for="(item, idx) in lyricArys"
                 :key="idx"
@@ -37,11 +35,11 @@
             <a :href="currentTrack.url" target="_blank" class="player-controls__item">
               <text class="iconfont">&#xe61f;</text>
             </a>
-            <view class="player-controls__item" @click="prevTrack">
-              <text class="iconfont">&#xe64c;</text>
+            <view class="player-controls__item">
+              <text class="iconfont" key="prevTrack" @click="prevTrack">&#xe64c;</text>
             </view>
-            <view class="player-controls__item" @click="nextTrack">
-              <text class="iconfont">&#xe64f;</text>
+            <view class="player-controls__item">
+              <text class="iconfont" key="nextTrack" @click="nextTrack">&#xe64f;</text>
             </view>
             <view class="player-controls__item -xl js-play" @click="play">
               <text v-if="isTimerPlaying" class="iconfont">&#xe69e;</text>
@@ -91,10 +89,19 @@ export default {
   },
   computed: mapState(["currentTracks"]),
   async onLoad(option) {
-    const vm = this;
     const songIds = [];
     const tempTracks = this.currentTracks;
     tempTracks.map(item => {
+      uni.compressImage({
+        src: item.cover,
+        success: (res)=>{
+          console.log(res)
+          item.cover = res.tempFilePath
+        },
+        fail: (res) => {
+          console.log(123)
+        }
+      })
       songIds.push(item.id);
     });
     getSongIds(songIds.join(",")).then(res => {
@@ -105,9 +112,9 @@ export default {
       tempTracks.map(item => {
         item.source = songId[item.id];
       });
-      this.currentTrack = tempTracks[option.nowIndex];
+      this.currentTrack = tempTracks[+option.nowIndex];
+      this.currentTrackIndex = +option.nowIndex;
       this.getLyr();
-      this.currentTrackIndex = option.nowIndex;
       innerAudioContext.src = this.currentTrack.source;
       innerAudioContext.autoplay = true;
       innerAudioContext.onTimeUpdate(() => {
@@ -116,30 +123,10 @@ export default {
       innerAudioContext.onSeeked(() => {
         this.generateTime();
       });
-      innerAudioContext.onStop(() => {
-        this.nextTrack();
-        this.isTimerPlaying = true;
-      });
     });
     this.tracks = tempTracks;
   },
   methods: {
-    getLyr() {
-      getSongLyric(this.currentTrack.id).then(res => {
-        const lyric = res.lrc.lyric;
-        const lyricAry = lyric.split("\n");
-        let temp = [];
-        const lyricArys = lyricAry.map(item => {
-          item = item.split("]");
-          if (item[1]) {
-            temp = item[0].match(/\d{2}/g);
-            item[0] = temp[0] * 60 + Number(temp[1]);
-          }
-          return item;
-        });
-        this.lyricArys = lyricArys.filter(item => item[1]);
-      });
-    },
     play() {
       if (innerAudioContext.paused) {
         innerAudioContext.play();
@@ -173,9 +160,14 @@ export default {
       }
       this.duration = durmin + ":" + dursec;
       this.currentTime = curmin + ":" + cursec;
-      if(this.currentTimeNum>=this.lyricArys[this.beginScrolleTo][0]){
-        this.currentLyr = "lyr" + this.lyricArys[this.beginScrolleTo-4][0];
-        this.beginScrolleTo = +this.beginScrolleTo + 1;
+      if(this.lyricArys){
+        if(this.currentTimeNum>=this.lyricArys[this.beginScrolleTo][0] && this.lyricArys[this.beginScrolleTo]){
+          this.currentLyr = "lyr" + this.lyricArys[this.beginScrolleTo-4][0];
+          this.beginScrolleTo = +this.beginScrolleTo + 1;
+        }
+        if(this.currentTimeNum>this.lyricArys[this.lyricArys.length-1][0]){
+          innerAudioContext.stop();
+        }
       }
     },
     updateBar(x) {
@@ -207,10 +199,10 @@ export default {
       this.updateBar(e.detail.x);
     },
     prevTrack() {
+      console.log(this.currentTrackIndex)
       this.transitionName = "zoomInDown";
-      this.isShowCover = false;
       if (this.currentTrackIndex > 0) {
-        this.currentTrackIndex--;
+        this.currentTrackIndex = +this.currentTrackIndex - 1;
       } else {
         this.currentTrackIndex = this.tracks.length - 1;
       }
@@ -218,10 +210,10 @@ export default {
       this.resetPlayer();
     },
     nextTrack() {
+      console.log('nextTick',this.currentTrackIndex)
       this.transitionName = "zoomInUp";
-      this.isShowCover = false;
       if (this.currentTrackIndex < this.tracks.length - 1) {
-        this.currentTrackIndex++;
+        this.currentTrackIndex = +this.currentTrackIndex + 1;
       } else {
         this.currentTrackIndex = 0;
       }
@@ -229,18 +221,31 @@ export default {
       this.resetPlayer();
     },
     resetPlayer() {
+      console.log('resetPlayer'+this.currentTrackIndex)
       this.barWidth = 0;
       this.circleLeft = 0;
-      // innerAudioContext.currentTime = 0;
       innerAudioContext.src = this.currentTrack.source;
-      setTimeout(() => {
-        if (this.isTimerPlaying) {
-          innerAudioContext.play();
-        } else {
-          innerAudioContext.pause();
-        }
-      }, 300);
+      innerAudioContext.play();
       this.getLyr();
+      this.currentLyr= "lyr0";
+      this.currentTimeNum= 0;
+      this.beginScrolleTo= 4;
+    },
+    getLyr() {
+      getSongLyric(this.currentTrack.id).then(res => {
+        const lyric = res.lrc.lyric;
+        const lyricAry = lyric.split("\n");
+        let temp = [];
+        const lyricArys = lyricAry.map(item => {
+          item = item.split("]");
+          if (item[1]) {
+            temp = item[0].match(/\d{2}/g);
+            item[0] = temp[0] * 60 + Number(temp[1]);
+          }
+          return item;
+        });
+        this.lyricArys = lyricArys.filter(item => item[1]);
+      });
     },
     favorite() {
       this.tracks[this.currentTrackIndex].favorited = !this.tracks[
@@ -319,8 +324,6 @@ body {
     position: relative;
     z-index: 2;
     border-radius: 15px;
-    // transform: perspective(512px) translate3d(0, 0, 0);
-    // transition: all .4s cubic-bezier(.125, .625, .125, .875);
     z-index: 1;
 
     @media screen and (max-width: 576px), (max-height: 500px) {
@@ -333,6 +336,12 @@ body {
     }
 
     &__item {
+      width: 300px;
+      height: 300px;
+      @media screen and (max-width: 576px), (max-height: 500px) {
+        width: 290px;
+        height: 250px;
+      }
       background-repeat: no-repeat;
       background-position: center;
       background-size: cover;
@@ -370,16 +379,6 @@ body {
         position: absolute;
         border-radius: 15px;
       }
-    }
-
-    &__img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 15px;
-      box-shadow: 0px 10px 40px 0px rgba(76, 70, 124, 0.5);
-      user-select: none;
-      pointer-events: none;
     }
   }
 
@@ -443,41 +442,11 @@ body {
         }
       }
 
-      &::before {
-        content: "";
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        background: #fff;
-        transform: scale(0.5);
-        opacity: 0;
-        box-shadow: 0px 5px 10px 0px rgba(76, 70, 124, 0.2);
-        transition: all 0.3s ease-in-out;
-        transition: all 0.4s cubic-bezier(0.35, 0.57, 0.13, 0.88);
-      }
-
-      @media screen and (min-width: 500px) {
-        &:hover {
-          color: #532ab9;
-
-          &::before {
-            opacity: 1;
-            transform: scale(1.3);
-          }
-        }
-      }
-
-      @media screen and (max-width: 576px), (max-height: 500px) {
-        &:active {
-          color: #532ab9;
-
-          &::before {
-            opacity: 1;
-            transform: scale(1.3);
-          }
-        }
-      }
+      // @media screen and (max-width: 576px), (max-height: 500px) {
+      //   &:active {
+      //     color: #532ab9;
+      //   }
+      // }
 
       .icon {
         position: relative;

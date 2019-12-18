@@ -43,6 +43,7 @@
       </view>
     </view>
 
+    <view class="padding-tb padding-left-sm solid-top text-lg">推荐歌单</view>
     <view class="grid col-3">
       <view v-for="(item) in songCards" :key="item.id" class="song-item" @click="toSongList(item.id)">
         <view class="song-item-contain">
@@ -57,6 +58,7 @@
       </view>
     </view>
 
+    <view class="padding-tb padding-left-sm solid-top text-lg">随便看看</view>
     <view v-if="videoList.length>0">
       <view
         class="cu-card case video-list"
@@ -114,102 +116,102 @@ export default {
         }
       ],
       swiperList: [
-        {
-          imageUrl:
-            "http://p1.music.126.net/E9NihLJVETSPL8ZZxlEuUQ==/109951164541816124.jpg",
-          id: "10905804"
-        },
-        {
-          imageUrl:
-            "http://p1.music.126.net/S6X6JetexJawtk5Oo-weHw==/109951164542223793.jpg",
-          id: "10905772"
-        },
-        {
-          imageUrl:
-            "http://p1.music.126.net/ui1Yv7azWHbF5JhxLp1WIA==/109951164541425768.jpg",
-          id: "0"
-        },
-        {
-          imageUrl:
-            "http://p1.music.126.net/kf5F9_mEkSJNA46MyK84ug==/109951164541433601.jpg",
-          id: "84005274"
-        },
-        {
-          imageUrl:
-            "http://p1.music.126.net/0SO6J_XKU0eHlsSGHxFFtQ==/109951164541450532.jpg",
-          id: "83826010"
-        },
-        {
-          imageUrl:
-            "http://p1.music.126.net/MxNXMnQiLI9E6iFM5lgb7g==/109951164542200776.jpg",
-          id: "1386259535"
-        },
-        {
-          imageUrl:
-            "http://p1.music.126.net/NQP_bnKzlslZmnranSJuQQ==/109951164541452440.jpg",
-          id: "1408587372"
-        },
-        {
-          imageUrl:
-            "http://p1.music.126.net/kssvcOARkiOo_T5WCGTq1g==/109951164541465067.jpg",
-          id: "1408738743"
-        },
-        {
-          imageUrl:
-            "http://p1.music.126.net/iVrxuD2jTLe4OREFqDoZAQ==/109951164541460356.jpg",
-          id: "1408776050"
-        }
+        // {
+        //   imageUrl:
+        //     "http://p1.music.126.net/E9NihLJVETSPL8ZZxlEuUQ==/109951164541816124.jpg",
+        //   id: "10905804"
+        // },
+        // {
+        //   imageUrl:
+        //     "http://p1.music.126.net/S6X6JetexJawtk5Oo-weHw==/109951164542223793.jpg",
+        //   id: "10905772"
+        // },
+        // {
+        //   imageUrl:
+        //     "http://p1.music.126.net/ui1Yv7azWHbF5JhxLp1WIA==/109951164541425768.jpg",
+        //   id: "0"
+        // },
+        // {
+        //   imageUrl:
+        //     "http://p1.music.126.net/kf5F9_mEkSJNA46MyK84ug==/109951164541433601.jpg",
+        //   id: "84005274"
+        // },
+        // {
+        //   imageUrl:
+        //     "http://p1.music.126.net/0SO6J_XKU0eHlsSGHxFFtQ==/109951164541450532.jpg",
+        //   id: "83826010"
+        // },
+        // {
+        //   imageUrl:
+        //     "http://p1.music.126.net/MxNXMnQiLI9E6iFM5lgb7g==/109951164542200776.jpg",
+        //   id: "1386259535"
+        // },
+        // {
+        //   imageUrl:
+        //     "http://p1.music.126.net/NQP_bnKzlslZmnranSJuQQ==/109951164541452440.jpg",
+        //   id: "1408587372"
+        // },
+        // {
+        //   imageUrl:
+        //     "http://p1.music.126.net/kssvcOARkiOo_T5WCGTq1g==/109951164541465067.jpg",
+        //   id: "1408738743"
+        // },
+        // {
+        //   imageUrl:
+        //     "http://p1.music.126.net/iVrxuD2jTLe4OREFqDoZAQ==/109951164541460356.jpg",
+        //   id: "1408776050"
+        // }
       ],
       songCards: [
-        {
-          id: 3112654749,
-          name: "岁月万花筒 | 歌声中重温即将逝去的10年代",
-          copywriter: "编辑推荐：过去的10年代，哪首歌是你的最爱呢~",
-          imageUrl:
-            "https://p1.music.126.net/V9D5mC-EgLxzV-k-jugmyA==/109951164541181281.jpg",
-          playCount: "413467"
-        },
-        {
-          id: 3097856403,
-          name: "欧美｜漫溯在霓虹街 掩于夜幕下的温柔",
-          copywriter:
-            "编辑推荐：在一个晴好的日子遇见你，发现你是一切美好的总和~",
-          imageUrl:
-            "https://p1.music.126.net/koEqZgg8dTVWuUccrZoVxQ==/109951164519954466.jpg",
-          playCount: "140282"
-        },
-        {
-          id: 979321026,
-          name: "好听到单曲循环",
-          copywriter: "热门推荐",
-          imageUrl:
-            "https://p1.music.126.net/1gNcBmzdIaQtU00Dvp_TvQ==/109951163912081772.jpg",
-          playCount: "103902160"
-        },
-        {
-          id: 3068492515,
-          name: "2019就快结束了，你的愿望实现了没",
-          copywriter: "热门推荐",
-          imageUrl:
-            "https://p1.music.126.net/P347rpSGpaP4DoKbZ6Gyiw==/109951164499552611.jpg",
-          playCount: "2242331"
-        },
-        {
-          id: 3027102694,
-          name: "欧美励志//只有奋笔疾书，才能逆风前行",
-          copywriter: "热门推荐",
-          imageUrl:
-            "https://p1.music.126.net/1Nx7mLel4YoVjEYpPhqBYw==/109951164503487070.jpg",
-          playCount: "899911"
-        },
-        {
-          id: 1984054025,
-          name: "赖冠霖的手机歌单",
-          copywriter: "热门推荐",
-          imageUrl:
-            "https://p1.music.126.net/wiJhSfiYEqfR2BPZvHrY8w==/19060034067946412.jpg",
-          playCount: "860830"
-        }
+        // {
+        //   id: 3112654749,
+        //   name: "岁月万花筒 | 歌声中重温即将逝去的10年代",
+        //   copywriter: "编辑推荐：过去的10年代，哪首歌是你的最爱呢~",
+        //   imageUrl:
+        //     "https://p1.music.126.net/V9D5mC-EgLxzV-k-jugmyA==/109951164541181281.jpg",
+        //   playCount: "413467"
+        // },
+        // {
+        //   id: 3097856403,
+        //   name: "欧美｜漫溯在霓虹街 掩于夜幕下的温柔",
+        //   copywriter:
+        //     "编辑推荐：在一个晴好的日子遇见你，发现你是一切美好的总和~",
+        //   imageUrl:
+        //     "https://p1.music.126.net/koEqZgg8dTVWuUccrZoVxQ==/109951164519954466.jpg",
+        //   playCount: "140282"
+        // },
+        // {
+        //   id: 979321026,
+        //   name: "好听到单曲循环",
+        //   copywriter: "热门推荐",
+        //   imageUrl:
+        //     "https://p1.music.126.net/1gNcBmzdIaQtU00Dvp_TvQ==/109951163912081772.jpg",
+        //   playCount: "103902160"
+        // },
+        // {
+        //   id: 3068492515,
+        //   name: "2019就快结束了，你的愿望实现了没",
+        //   copywriter: "热门推荐",
+        //   imageUrl:
+        //     "https://p1.music.126.net/P347rpSGpaP4DoKbZ6Gyiw==/109951164499552611.jpg",
+        //   playCount: "2242331"
+        // },
+        // {
+        //   id: 3027102694,
+        //   name: "欧美励志//只有奋笔疾书，才能逆风前行",
+        //   copywriter: "热门推荐",
+        //   imageUrl:
+        //     "https://p1.music.126.net/1Nx7mLel4YoVjEYpPhqBYw==/109951164503487070.jpg",
+        //   playCount: "899911"
+        // },
+        // {
+        //   id: 1984054025,
+        //   name: "赖冠霖的手机歌单",
+        //   copywriter: "热门推荐",
+        //   imageUrl:
+        //     "https://p1.music.126.net/wiJhSfiYEqfR2BPZvHrY8w==/19060034067946412.jpg",
+        //   playCount: "860830"
+        // }
       ],
       videoList: [],
       currentIdx: -1
@@ -225,23 +227,24 @@ export default {
     }
   },
   onLoad: function() {
-    // this.request('/banner').then(res=>{
-    //   this.swiperList = res.banners.map(item=>{
-    //     return {
-    //       imageUrl: item.imageUrl,
-    //       id:item.targetId
-    //     }
-    //   })
-    // })
-    // this.request('/personalized?limit=6').then(res=>{
-    //   this.songCards = res.result.map(item=>{
-    //     return{
-    //       imageUrl: item.picUrl,
-    //       playCount: item.playCount,
-    //       name: item.name
-    //     }
-    //   })
-    // })
+    this.request('/banner').then(res=>{
+      this.swiperList = res.banners.map(item=>{
+        return {
+          imageUrl: item.imageUrl,
+          id:item.targetId
+        }
+      })
+    })
+    this.request('/personalized?limit=6').then(res=>{
+      this.songCards = res.result.map(item=>{
+        return{
+          id: item.id,
+          imageUrl: item.picUrl,
+          playCount: item.playCount,
+          name: item.name
+        }
+      })
+    })
     this.request("/mv/all?limit=10").then(res => {
       this.videoList = res.data.map(item => {
         return {
@@ -275,18 +278,14 @@ export default {
         videoContext.play();
       } else {
         var videoContextPrev = wx.createVideoContext("video" + this.currentIdx);
-        console.log(videoContextPrev)
         videoContextPrev.stop();
         this.currentIdx = idx
-        // setTimeout(()=>{
-        //   this.currentIdx = idx
-        //   var videoContextCurrent = wx.createVideoContext("video" + idx);
-        //   videoContextCurrent.play();
-        // })
       }
     },
     toSongList(id){
-
+      uni.navigateTo({
+        url: '/pages/songInfoAndList/songInfoAndList?id='+id
+      })
     },
   }
 };
