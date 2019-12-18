@@ -4,17 +4,21 @@
       <view class="player">
         <view class="player__top">
           <view class="player-cover" v-show="showCover" @click="showCover=false">
+            <block v-for="(track, index) in tracks" :key="track.id">
               <view
-                v-for="(track, index) in tracks"
                 v-if="index === currentTrackIndex"
-                :key="track.id"
                 :class="['animated faster player-cover__item',transitionName]"
                 :style="{ backgroundImage: `url(${track.cover})` }"
               ></view>
+            </block>
           </view>
 
           <view class="player-cover" v-show="!showCover" @click="showCover=true">
-            <scroll-view scroll-y :class="['animated faster player-scrollview',transitionName]" :scroll-into-view="currentLyr">
+            <scroll-view
+              scroll-y
+              :class="['animated faster player-scrollview',transitionName]"
+              :scroll-into-view="currentLyr"
+            >
               <view
                 v-for="(item, idx) in lyricArys"
                 :key="idx"
@@ -84,7 +88,7 @@ export default {
       showCover: true,
       currentLyr: "lyr0",
       currentTimeNum: 0,
-      beginScrolleTo:4,
+      beginScrolleTo: 4
     };
   },
   computed: mapState(["currentTracks"]),
@@ -94,14 +98,14 @@ export default {
     tempTracks.map(item => {
       uni.compressImage({
         src: item.cover,
-        success: (res)=>{
-          console.log(res)
-          item.cover = res.tempFilePath
+        success: res => {
+          console.log(res);
+          item.cover = res.tempFilePath;
         },
-        fail: (res) => {
-          console.log(123)
+        fail: res => {
+          console.log(123);
         }
-      })
+      });
       songIds.push(item.id);
     });
     getSongIds(songIds.join(",")).then(res => {
@@ -160,12 +164,17 @@ export default {
       }
       this.duration = durmin + ":" + dursec;
       this.currentTime = curmin + ":" + cursec;
-      if(this.lyricArys){
-        if(this.currentTimeNum>=this.lyricArys[this.beginScrolleTo][0] && this.lyricArys[this.beginScrolleTo]){
-          this.currentLyr = "lyr" + this.lyricArys[this.beginScrolleTo-4][0];
+      if (this.lyricArys) {
+        if (
+          this.currentTimeNum >= this.lyricArys[this.beginScrolleTo][0] &&
+          this.lyricArys[this.beginScrolleTo]
+        ) {
+          this.currentLyr = "lyr" + this.lyricArys[this.beginScrolleTo - 4][0];
           this.beginScrolleTo = +this.beginScrolleTo + 1;
         }
-        if(this.currentTimeNum>this.lyricArys[this.lyricArys.length-1][0]){
+        if (
+          this.currentTimeNum > this.lyricArys[this.lyricArys.length - 1][0]
+        ) {
           innerAudioContext.stop();
         }
       }
@@ -199,7 +208,7 @@ export default {
       this.updateBar(e.detail.x);
     },
     prevTrack() {
-      console.log(this.currentTrackIndex)
+      console.log(this.currentTrackIndex);
       this.transitionName = "zoomInDown";
       if (this.currentTrackIndex > 0) {
         this.currentTrackIndex = +this.currentTrackIndex - 1;
@@ -210,7 +219,7 @@ export default {
       this.resetPlayer();
     },
     nextTrack() {
-      console.log('nextTick',this.currentTrackIndex)
+      console.log("nextTick", this.currentTrackIndex);
       this.transitionName = "zoomInUp";
       if (this.currentTrackIndex < this.tracks.length - 1) {
         this.currentTrackIndex = +this.currentTrackIndex + 1;
@@ -221,15 +230,15 @@ export default {
       this.resetPlayer();
     },
     resetPlayer() {
-      console.log('resetPlayer'+this.currentTrackIndex)
+      console.log("resetPlayer" + this.currentTrackIndex);
       this.barWidth = 0;
       this.circleLeft = 0;
       innerAudioContext.src = this.currentTrack.source;
       innerAudioContext.play();
       this.getLyr();
-      this.currentLyr= "lyr0";
-      this.currentTimeNum= 0;
-      this.beginScrolleTo= 4;
+      this.currentLyr = "lyr0";
+      this.currentTimeNum = 0;
+      this.beginScrolleTo = 4;
     },
     getLyr() {
       getSongLyric(this.currentTrack.id).then(res => {

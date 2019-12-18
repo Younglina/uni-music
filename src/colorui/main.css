@@ -3910,3 +3910,14 @@ scroll-view.cu-steps .cu-item {
 .lines-white {
 	color: #ffffff;
 }
+
+.wy-tag {
+	font-size: 20rpx;
+	color: #ffffff;
+	position: absolute;
+	background-color: rgba(0, 0, 0, 0.3);
+}
+.wy-icon {
+	margin-right: 8rpx;
+	font-size: 24rpx;
+}

@@ -42,7 +42,7 @@
           </view>
         </view>
         <view class="action">
-          <view>ggg</view>
+          <view class="iconfont">&#xe631;</view>
         </view>
       </view>
     </view>
@@ -60,24 +60,28 @@
 
           <view class="song-sub text-sm padding">
             <view>
-              <text v-for="(item, idx) in songInfo.tags" :key="idx" class='cu-tag round song-tag text-sm'>{{item}}</text>
+              <text
+                v-for="(item, idx) in songInfo.tags"
+                :key="idx"
+                class="cu-tag round song-tag text-sm"
+              >{{item}}</text>
             </view>
             <view class="padding-top">{{ songInfo.desc }}</view>
           </view>
-          
+
           <view class="song-savebtn">
             <button class="cu-btn round" @click="saveImg">保存封面</button>
           </view>
         </view>
-        <view class="bg-img cu-bg-img" :style="{ backgroundImage: `url(${songInfo.imageUrl})` }">
-        </view>
+        <view class="bg-img cu-bg-img" :style="{ backgroundImage: `url(${songInfo.imageUrl})` }"></view>
       </view>
     </view>
   </scroll-view>
 </template>
 
 <script>
-import {mapMutations} from 'vuex'
+import { mapMutations } from "vuex";
+import { getDetail } from "../../utils/api";
 export default {
   data() {
     return {
@@ -91,10 +95,10 @@ export default {
     this.getData(option.id);
   },
   methods: {
-    ...mapMutations(['setCurrentTracks']),
+    ...mapMutations(["setCurrentTracks"]),
     async getData(id) {
       this.fetchFinish = false;
-      const songInfoData = await this.request("/playlist/detail?id="+id);
+      const songInfoData = await getDetail(id);
       const data = songInfoData.playlist;
       this.songInfo = {
         name: data.name,
@@ -116,32 +120,32 @@ export default {
           name: item.name,
           artistName: item.ar[0].name,
           alName: item.al.name,
-          cover: item.al.picUrl,
+          cover: item.al.picUrl
         };
       });
-      this.setCurrentTracks(this.songList)
+      this.setCurrentTracks(this.songList);
       this.fetchFinish = true;
     },
-    saveImg(){
+    saveImg() {
       uni.downloadFile({
-          url: this.songInfo.imageUrl,
-          success: (res) => {
-              if (res.statusCode === 200) {
-                  uni.saveImageToPhotosAlbum({
-                    filePath: res.tempFilePath,
-                    success: ()=>{
-                      uni.showToast()
-                    }
-                  })
+        url: this.songInfo.imageUrl,
+        success: res => {
+          if (res.statusCode === 200) {
+            uni.saveImageToPhotosAlbum({
+              filePath: res.tempFilePath,
+              success: () => {
+                uni.showToast();
               }
+            });
           }
+        }
       });
     },
-    toPlaying(idx){
+    toPlaying(idx) {
       uni.navigateTo({
-        url: '/pages/playing/playing?nowIndex='+idx
-      })
-    },
+        url: "/pages/playing/playing?nowIndex=" + idx
+      });
+    }
   }
 };
 </script>
@@ -183,12 +187,12 @@ export default {
     }
   }
   .cu-modal {
-    color: #FFF;
+    color: #fff;
     .cu-dialog {
       width: 100%;
       height: 100%;
       border-radius: 0;
-      .cu-contain{
+      .cu-contain {
         position: absolute;
         height: 100%;
         z-index: 200;
@@ -208,22 +212,22 @@ export default {
       border-radius: 5px;
       margin: 0 auto;
     }
-    .song-name{
+    .song-name {
       border-bottom: 1px solid gainsboro;
     }
-    .song-sub{
-      >view{
+    .song-sub {
+      > view {
         text-align: left;
       }
-      .song-tag{
-        background-color: rgba(255, 255, 255, 0.3)
+      .song-tag {
+        background-color: rgba(255, 255, 255, 0.3);
       }
     }
-    .song-savebtn{
+    .song-savebtn {
       position: absolute;
       width: 100%;
       bottom: 50rpx;
-      button{
+      button {
         background-color: transparent;
         border: 1px solid gainsboro;
         color: white;

@@ -1,9 +1,5 @@
 <template>
   <view class="recommend">
-    <!-- <cu-custom bgcolor="bg-gradual-pink" :isBack="true">
-      <view slot="backText">返回</view>
-      <view slot="content">导航栏</view>
-    </cu-custom>-->
     <swiper
       class="card-swiper"
       :indicator-dots="true"
@@ -45,16 +41,8 @@
 
     <view class="padding-tb padding-left-sm solid-top text-lg">推荐歌单</view>
     <view class="grid col-3">
-      <view v-for="(item) in songCards" :key="item.id" class="song-item" @click="toSongList(item.id)">
-        <view class="song-item-contain">
-          <view class="image" :style="{ backgroundImage: `url(${item.imageUrl})` }">
-            <view class="wy-tag top-right">
-              <text class="iconfont wy-icon">&#xe61b;</text>
-              {{item.playCount | formatCount}}
-            </view>
-          </view>
-          <text class="song-name">{{item.name}}</text>
-        </view>
+      <view v-for="(item) in songCards" :key="item.id" >
+        <song-card :song="item"></song-card>
       </view>
     </view>
 
@@ -97,6 +85,8 @@
   </view>
 </template>
 <script>
+import SongCard from '../../components/songCard'
+import { getRecommentSonglist, getAlltypeMv, getBanner } from "../../utils/api";
 export default {
   data() {
     return {
@@ -217,17 +207,11 @@ export default {
       currentIdx: -1
     };
   },
-  filters: {
-    formatCount(v) {
-      if (v / 10000 > 1) {
-        return Math.floor(v / 10000) + "万";
-      } else if (v / 100000000 > 1) {
-        (v / 100000000).toFixed(1) + "亿";
-      }
-    }
+  components:{
+    SongCard
   },
   onLoad: function() {
-    this.request('/banner').then(res=>{
+    getBanner().then(res=>{
       this.swiperList = res.banners.map(item=>{
         return {
           imageUrl: item.imageUrl,
@@ -235,7 +219,7 @@ export default {
         }
       })
     })
-    this.request('/personalized?limit=6').then(res=>{
+    getRecommentSonglist().then(res=>{
       this.songCards = res.result.map(item=>{
         return{
           id: item.id,
@@ -245,7 +229,7 @@ export default {
         }
       })
     })
-    this.request("/mv/all?limit=10").then(res => {
+    getAlltypeMv().then(res => {
       this.videoList = res.data.map(item => {
         return {
           cover: item.cover,
@@ -274,10 +258,10 @@ export default {
       if (!this.currentIdx) {
         // 没有播放时播放视频
         this.currentIdx = idx
-        var videoContext = wx.createVideoContext("video" + idx);
+        let videoContext = wx.createVideoContext("video" + idx);
         videoContext.play();
       } else {
-        var videoContextPrev = wx.createVideoContext("video" + this.currentIdx);
+        let videoContextPrev = wx.createVideoContext("video" + this.currentIdx);
         videoContextPrev.stop();
         this.currentIdx = idx
       }
@@ -294,16 +278,6 @@ export default {
 <style lang="scss">
 .recommend {
   height: 100%;
-}
-.wy-tag {
-  font-size: 20rpx;
-  color: #ffffff;
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.3);
-  .wy-icon {
-    margin-right: 8rpx;
-    font-size: 24rpx;
-  }
 }
 .top-right {
   top: 6rpx;
@@ -342,23 +316,6 @@ export default {
   .iconfont-info {
     font-size: 14px;
     margin-top: 10rpx;
-  }
-}
-.song-item {
-  padding: 0 10rpx 16rpx;
-  &-contain {
-    .image {
-      position: relative;
-      border-radius: 5px;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: cover;
-      width: 240rpx;
-      height: 240rpx;
-    }
-    .song-name {
-      font-size: 24rpx;
-    }
   }
 }
 

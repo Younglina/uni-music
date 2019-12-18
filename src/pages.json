@@ -1,9 +1,15 @@
 {
 	"pages": [
 		{
+			"path": "pages/recommendSongList/recommendSongList",
+			"style": {
+				"navigationBarTitleText": "推荐歌单"
+			}
+		},
+		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "uni-music"
 			}
 		},
 		{
@@ -15,7 +21,7 @@
 		{
 			"path": "pages/playing/playing",
 			"style": {
-				"navigationBarTitleText": "playing"
+				"navigationBarTitleText": "正在播放"
 			}
 		}
 	],
