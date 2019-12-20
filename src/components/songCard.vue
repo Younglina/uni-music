@@ -15,10 +15,10 @@
 <script>
 export default {
   props: {
-      song:{
-          type: Object,
-          default: null
-      }
+    song: {
+      type: Object,
+      default: null
+    }
   },
   filters: {
     formatCount(v) {
@@ -28,13 +28,20 @@ export default {
         (v / 100000000).toFixed(1) + "亿";
       }
     }
+  },
+  methods:{
+    toSongList(id){
+      uni.navigateTo({
+        url: '/pages/songInfoAndList/songInfoAndList?id='+id
+      })
+    }
   }
 };
 </script>
 
 <style lang="scss">
 .song-item {
-  padding: 0 10rpx 16rpx;
+  padding: 0 5rpx 16rpx;
   &-contain {
     .image {
       position: relative;
@@ -42,12 +49,16 @@ export default {
       background-repeat: no-repeat;
       background-position: center;
       background-size: cover;
-      width: 240rpx;
-      height: 240rpx;
+      width: 220rpx;
+      height: 220rpx;
     }
     .song-name {
       font-size: 24rpx;
     }
+  }
+  .top-right {
+    top: 6rpx;
+    right: 6rpx;
   }
 }
 </style>

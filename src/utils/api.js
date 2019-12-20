@@ -41,6 +41,6 @@ export function getTgas() {
 
 //通过分类获取歌单
 export function getSonglistByTag(tag) {
-    return request(`/top/playlist?limit=30&order=${tag}`)
+    return request(`/top/playlist?limit=30&order=hot&cat=${tag}`)
 }
 

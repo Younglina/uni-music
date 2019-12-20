@@ -265,12 +265,7 @@ export default {
         videoContextPrev.stop();
         this.currentIdx = idx
       }
-    },
-    toSongList(id){
-      uni.navigateTo({
-        url: '/pages/songInfoAndList/songInfoAndList?id='+id
-      })
-    },
+    }
   }
 };
 </script>
@@ -278,10 +273,6 @@ export default {
 <style lang="scss">
 .recommend {
   height: 100%;
-}
-.top-right {
-  top: 6rpx;
-  right: 6rpx;
 }
 .btm-left {
   bottom: 6rpx;
