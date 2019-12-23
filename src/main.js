@@ -9,7 +9,7 @@ Vue.config.productionTip = false
 Vue.prototype.request = request
 Vue.prototype.$store = store;
 
-App.mpType = 'app'
+// App.mpType = 'weixin'
 uni.getSystemInfo({
   success: function(e) {
     Vue.prototype.StatusBar = e.statusBarHeight;

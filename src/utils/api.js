@@ -44,3 +44,8 @@ export function getSonglistByTag(tag) {
     return request(`/top/playlist?limit=30&order=hot&cat=${tag}`)
 }
 
+//通过热搜列表
+export function getSearchot() {
+    return request(`/search/hot/detail`)
+}
+

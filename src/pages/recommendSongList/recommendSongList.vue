@@ -1,108 +1,84 @@
 <template>
   <view class="recommend-songlist">
-    <scroll-view scroll-x class="tag-scrollview">
+    <scroll-view scroll-x class="tag-scrollview" :scroll-into-view="currentTag">
       <view
         v-for="(item,idx) in tagList"
         :key="item.id"
-        :id="`tag${item.id}`"
-        :class="['padding-lr-lg padding-tb text-sm',currentIdx===idx?'active':'']"
-      >{{ item.name }}</view>
+        :id="`tag${idx}`"
+        :class="['padding-lr-lg padding-tb text-sm',tabIndex===idx?'active':'']"
+        @click="handleTagClick(idx)"
+      >{{ item.tagName }}</view>
     </scroll-view>
     <swiper
       class="screen-swiper padding-sm"
+      :current="tabIndex"
       :circular="true"
       duration="500"
       @animationfinish="swiperChange"
-      @transition="onswiperscroll"
-      :disable-touch="isDisable"
     >
-      <swiper-item v-for="item in tagList" :key="item.name" :item-id="item.name">
-        <scroll-view
-          v-if="songListTag[currentIdx].song.length>0"
-          scroll-y
-          class="song-scrollview"
-          :key="item.name"
-        >
-          <view class="grid col-3">
-            <view v-for="songlist in songListTag[currentIdx].song" :key="songlist.id">
-              <song-card :song="songlist"></song-card>
-            </view>
-          </view>
-        </scroll-view>
+      <swiper-item
+        v-for="(item, index) in tagList"
+        :key="index"
+        :item-id="item.tagName"
+      >
+        <song-page :tag="item.tagName" :ref="'page' + index"></song-page>
       </swiper-item>
     </swiper>
   </view>
 </template>
 
 <script>
-import SongCard from "../../components/songCard";
-import { getTgas, getSonglistByTag } from "../../utils/api";
+import SongPage from "./songlistPage";
+import { getTgas } from "../../utils/api";
 export default {
   data() {
     return {
       tagList: [
         {
-          name: "推荐",
+          tagName: "推荐",
           id: "1220"
         }
       ],
-      songListTag: [],
-      currentIdx: 0,
-      isDisable:false,
+      tabIndex: 0,
+      currentTag: "tag0",
+      notSwitch: false,
     };
   },
   components: {
-    SongCard
+    SongPage
   },
-  async onLoad() {
-    await this.tgas();
-    this.songlistByTag(0, "推荐");
-  },
-  methods: {
-    tgas() {
-      getTgas().then(res => {
+  async onReady() {
+    await getTgas().then(res => {
         this.tagList = this.tagList.concat(
           res.tags.slice(0, 6).map(item => {
             return {
-              name: item.name,
+              tagName: item.name,
               id: item.id
             };
           })
         );
       });
-    },
-    songlistByTag(id, tag) {
-      if (!this.songListTag[id]) {
-        let queryTag = tag;
-        if (tag === "推荐") {
-          queryTag = "全部";
-        }
-        getSonglistByTag(queryTag).then(res => {
-          const temp = res.playlists.map(item => {
-            return {
-              id: item.id,
-              imageUrl: item.coverImgUrl,
-              playCount: item.playCount,
-              name: item.name
-            };
-          });
-          this.songListTag.push({
-            song: temp
-          });
-        });
+    this.pageList = [];
+    for (let i = 0; i < this.tagList.length; i++) {
+      this.pageList.push(this.$refs["page" + i][0]);
+    }
+    this.switchTab(0);
+  },    
+  methods: {
+    switchTab(index) {
+      if (this.pageList[index].songList.length === 0) {
+        this.pageList[index].songlistByTag();
       }
     },
-    onswiperscroll(e){
-      if(this.currentIdx===0 && e.detail.dx<=0){
-        this.isDisable=true
-      }else{
-        this.isDisable=false
-      }
+    handleTagClick(idx, tag) {
+      this.tabIndex = idx;
+      this.currentTag = `tag${idx}`;
+      this.switchTab(idx);
     },
     swiperChange(e) {
-      console.log(this.currentIdx)
-      this.currentIdx = e.detail.current;
-      this.songlistByTag(e.detail.current, e.detail.currentItemId);
+      this.tabIndex = e.detail.current;
+      this.currentTag = `tag${e.detail.current}`
+      this.switchTab(e.detail.current)
     }
   }
 };
